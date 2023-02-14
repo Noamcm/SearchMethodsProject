@@ -70,7 +70,7 @@ class Puzzle:
         """ Heuristic Function to calculate hueristic value f(x) = h(x) + g(x) """
         return self.h(start.data, goal) + start.level
 
-    def h(self, start, goal):
+    def h(self, start, goal): # HEURISTIC!!
         """ Calculates the different between the given puzzles """
         temp = 0
         for i in range(0, self.n):
@@ -82,9 +82,9 @@ class Puzzle:
     def process(self):
         """ Accept Start and Goal Puzzle state"""
         print("Enter the start state matrix \n")
-        start = self.accept()
+        start = [["1","2","3"],["4","5","6"],["7","_","8"]]  # todo: change input - maybe set of many
         print("Enter the goal state matrix \n")
-        goal = self.accept()
+        goal = [["1","2","3"],["4","5","6"],["7","8","_"]]
 
         start = Node(start, 0, 0)
         start.fval = self.f(start, goal)
