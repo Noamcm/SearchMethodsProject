@@ -1,7 +1,8 @@
+import timeit
+
 import aStar
 import idaStar
-import euclideanDistanceHeuristic
-import emptyHeuristic
+import heuristics
 
 
 def main():
@@ -10,19 +11,27 @@ def main():
 
 
     goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
-    heuristic = euclideanDistanceHeuristic.heuristic
-    heuristice = emptyHeuristic.heuristic
 
-    solution1 = aStar.a_star(difficult_start_state, goal_state,heuristic)
-    solution2 = idaStar.ida_star(difficult_start_state, goal_state,heuristic)
-    print("A* result : "+ str(solution1))
-    print("IDA*  result: "+ str(solution2))
-
-    solution1e = aStar.a_star(difficult_start_state, goal_state,heuristice)
-    solution2e = idaStar.ida_star(difficult_start_state, goal_state,heuristice)
-
-    print("A* empty result: "+ str(solution1e))
-    print("IDA* empty  result: "+ str(solution2e))
+    euclidean_heuristic = heuristics.euclidean_distance_heuristic
+    manhattan_heuristic = heuristics.manhattan_distance_heuristic()
+    empty_heuristic = heuristics.empty_heuristic()
+   
+   
+   
+    aStarEuc = aStar.a_star(difficult_start_state, goal_state,euclidean_heuristic)
+    idaStarEuc = idaStar.ida_star(difficult_start_state, goal_state,euclidean_heuristic)
+    print("euclidean A* result : "+ str(aStarEuc))
+    print("euclidean IDA*  result: "+ str(idaStarEuc))
+    
+    aStarM = aStar.a_star(difficult_start_state, goal_state,manhattan_heuristic)
+    idaStarM = idaStar.ida_star(difficult_start_state, goal_state,manhattan_heuristic)
+    print("manhattan A* result : "+ str(aStarM))
+    print("manhattan IDA*  result: "+ str(idaStarM))
+    
+    aStarEmp = aStar.a_star(difficult_start_state, goal_state,empty_heuristic)
+    idaStarEmp = idaStar.ida_star(difficult_start_state, goal_state,empty_heuristic)
+    print("empty A* result: "+ str(aStarEmp))
+    print("empty  IDA* result: "+ str(idaStarEmp))
 
 if __name__ == "__main__":
     main()
