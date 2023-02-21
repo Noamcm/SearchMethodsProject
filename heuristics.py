@@ -23,5 +23,5 @@ def manhattan_distance_heuristic(state):
                 distance += abs(i - goal_i) + abs(j - goal_j)
     return distance
 
-def no_heuristic(state):
+def empty_heuristic(state):
     return 0
