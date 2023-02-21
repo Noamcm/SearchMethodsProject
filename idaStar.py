@@ -6,7 +6,7 @@ def ida_star(start_state, goal_state, heuristic_fn):
     while True:
         result, new_threshold = search(start_state, goal_state, 0, threshold, heuristic_fn)
         if result == "FOUND":
-            return threshold
+            return int(threshold)
         if result == float("inf"):
             return "NOT FOUND"
         threshold = new_threshold
