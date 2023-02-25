@@ -114,7 +114,7 @@ def calculate_heuristic(state):
         for j in range(3):
             value = state[i][j]
             if value != 0:
-                row = (value - 1) / 3
+                row = (value - 1) // 3
                 col = (value - 1) % 3
                 distance += abs(row - i) + abs(col - j)
     return distance
@@ -134,6 +134,7 @@ def a_star_lookahead(initial_state, final_state, k=0):
     while opened:
         # Get the node with the lowest cost + heuristic
         current_node = heapq.heappop(opened)  # input - best node in open list: v
+        print(len(opened)) #362880
         if current_node.g >= UB:  # 1 #or current_node.state == final_state
             # The solution has been found ,return path
             moves = []
@@ -147,7 +148,7 @@ def a_star_lookahead(initial_state, final_state, k=0):
         # Generate possible moves and add them to the opened
         for ne in current_node.neighbours:  # 4
             child = Node(ne, parent=current_node, g=current_node.g + 1)  # 5 - generateNode(op,v)
-            if child.is_closed:
+            if str(child.state) in closed:
                 continue
             # child.g = current_node.g + 1 + child.fu
             # child.move = get_move_direction(current_node.state, child.state)
@@ -160,14 +161,15 @@ def a_star_lookahead(initial_state, final_state, k=0):
                 min_cost, UB = lookAhead(child, LHB, UB, float('inf'), k)  # 12, 13 - lookahead call can update UB
                 if min_cost > child.F():  # 14.1
                     child.fu = min_cost  # 14.2
-            if str(child.state) not in closed and child not in opened:  # 15 - duplicateDetection(child)=False
+            if child not in opened:  # 15 - duplicateDetection(child)=False
                 heapq.heappush(opened, child)  # 16 - Insert child to open list
             else:  # 17
-                index = opened.index(child)
-                if opened[index] > child:  # 18 - Reorder child in OPEN (if required)
-                    opened[index] = child
-                    heapq.heapify(opened)
-                # heapq.heappush(opened, child)
+                heapq.heapreplace(opened, child)
+                #heapq.heappush(opened, child)
+                # index = opened.index(child)
+                # if opened[index] > child:  # 18 - Reorder child in OPEN (if required)
+                #     opened[index] = child
+                #     heapq.heapify(opened)
 
     # No solution found
     return None
@@ -193,14 +195,24 @@ def lookAhead(v, LHB, UB, minCost, k, current_level=0):
     return minCost, UB
 
 
-solvable_state = [
+unsolvable_state = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [8, 7, 0]
+]
+easy_solvable_state = [
     [1, 2, 3],
     [4, 5, 6],
     [0, 7, 8]
+]
+hard_solvable_state = [
+    [1, 2, 3],
+    [4, 6, 5],
+    [8, 7, 0]
 ]
 final_state = [
     [1, 2, 3],
     [4, 5, 6],
     [7, 8, 0]
 ]
-print(a_star_lookahead(solvable_state, final_state, k=5))
+print(a_star_lookahead(hard_solvable_state, final_state, k=2))
