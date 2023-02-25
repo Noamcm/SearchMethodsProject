@@ -1,6 +1,7 @@
 import heapq
 from TilePuzzle import *
 
+
 best_sol_goal_node = None
 
 def a_star_lookahead(tile_puzzle, k=0):
@@ -20,8 +21,9 @@ def a_star_lookahead(tile_puzzle, k=0):
         # Get the node with the lowest cost + heuristic
         current_node = heapq.heappop(opened)  # input - best node in open list: v
         # print(len(opened))  # 362880
-        if current_node.g >= UB:  # 1 #or current_node.state == final_state
+        if current_node.g >= UB and current_node.isFinalState:  # 1 #or current_node.state == final_state
             # The solution has been found ,return path
+            #print("final parent " ,best_sol_goal_node.parent.state)
             moves = best_sol_goal_node.getPathDirections()
             return len(moves), moves[::-1]  # 2 - halt
 
@@ -34,6 +36,7 @@ def a_star_lookahead(tile_puzzle, k=0):
             if child.fu >= UB:  # 6
                 continue  # 7 - Prune
             if child.isFinalState:  # 8 - goalTest(child)=True
+                #print("update parent ", child.parent.state)
                 UB = child.fu  # 8
             LHB = min(UB, current_node.F() + k)  # 10 - LHB=lookahead bound
             if child.fu <= LHB:  # 11

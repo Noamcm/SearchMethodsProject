@@ -16,20 +16,23 @@ def main():
     level = "medium"
     heuristic = "manhattan"
     puzzle_size = 8
-    k = 5
+    k = 4
     algorithm = a_star_lookahead
 
     tile_puzzle = TilePuzzle.TilePuzzle(puzzle_size, level, heuristic)
 
     times = []
-    for i in range(10):
+    lengths=[]
+    for i in range(100):
         print(i)
         start = time.time()
-        # print(a_star_lookahead(tile_puzzle, k=k))
-        print(algorithm(tile_puzzle))
+        # len_moves, moves = a_star(tile_puzzle)
+        len_moves, moves =(algorithm(tile_puzzle, k=k))
+        print(len_moves, moves)
+        lengths.append(len_moves)
         finish = time.time()
         times.append(finish - start)
-    print(algorithm.__name__, str(puzzle_size)+" tile puzzle", "k="+str(k), level, heuristic,  round(mean(times), 3))
+    print(algorithm.__name__, str(puzzle_size)+" tile puzzle", "k="+str(k), level, heuristic,  round(mean(times), 3) , max(lengths))
 
 
 if __name__ == "__main__":

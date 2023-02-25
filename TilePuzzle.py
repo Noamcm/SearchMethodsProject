@@ -19,8 +19,8 @@ class Node:
 
     def __lt__(self, other):
         # Used for sorting in the priority opened
-        # return (self.g + self.heuristic) < (other.g + other.heuristic)
-        return self.fu < other.fu
+        return self.F() < other.F()
+        # return self.fu < other.fu
 
     def __eq__(self, other):
         return self.state == other.state
@@ -116,8 +116,9 @@ class TilePuzzle:
             if difficulty=="easy":
                 self.start_state = [[1, 2, 3], [4, 5, 6], [0, 7, 8]]
             if difficulty=="medium":
-                # self.start_state = [[2, 3, 4], [1, 5, 6], [8, 7, 0]]
-                self.start_state = [[3,4,2], [1,0,6], [8,5,7]]
+                self.start_state = [[2, 3, 4], [1, 5, 6], [8, 7, 0]]
+                # self.start_state = [[3,4,2], [1,0,6], [8,5,7]]
+                # self.start_state = [[1, 3, 7], [4, 5, 8], [6, 2, 0]]
             if difficulty=="hard":
                 self.start_state = [[2, 1, 3], [5, 4, 0], [7, 8, 6]]
             if difficulty=="extreme":
