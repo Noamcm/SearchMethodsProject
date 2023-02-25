@@ -8,15 +8,15 @@ import TilePuzzle
 
 
 def main():
-    levels = ["easy","medium","hard","extreme","unsolvable"] #"medium" 18.459 "hard" 26.7 "extreme" 52.86
-    heuristics = ["manhattan","euclidean","empty"]
+    levels = ["easy", "medium", "hard", "extreme", "unsolvable"]  # "medium" 18.459 "hard" 26.7 "extreme" 52.86
+    heuristics = ["manhattan", "euclidean", "empty"]
     puzzle_sizes = [8,15]
-    algorithms = [a_star , a_star_lookahead]
+    algorithms = [a_star, a_star_lookahead]
 
-    level="medium"
+    level = "medium"
     heuristic = "manhattan"
     puzzle_size = 8
-    k= 5
+    k = 5
     algorithm = a_star_lookahead
 
     tile_puzzle = TilePuzzle.TilePuzzle(puzzle_size, level, heuristic)
@@ -29,7 +29,7 @@ def main():
         print(algorithm(tile_puzzle))
         finish = time.time()
         times.append(finish - start)
-    print(algorithm.__name__, str(puzzle_size)+" tile puzzle", "k="+str(k),level,heuristic ,  round(mean(times),3))
+    print(algorithm.__name__, str(puzzle_size)+" tile puzzle", "k="+str(k), level, heuristic,  round(mean(times), 3))
 
 
 if __name__ == "__main__":

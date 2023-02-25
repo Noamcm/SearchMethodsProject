@@ -116,7 +116,7 @@ class TilePuzzle:
             if difficulty=="easy":
                 self.start_state = [[1, 2, 3], [4, 5, 6], [0, 7, 8]]
             if difficulty=="medium":
-                #self.start_state = [[2, 3, 4], [1, 5, 6], [8, 7, 0]]
+                # self.start_state = [[2, 3, 4], [1, 5, 6], [8, 7, 0]]
                 self.start_state = [[3,4,2], [1,0,6], [8,5,7]]
             if difficulty=="hard":
                 self.start_state = [[2, 1, 3], [5, 4, 0], [7, 8, 6]]
@@ -154,7 +154,6 @@ class TilePuzzle:
                     distance += math.sqrt((i - row) ** 2 + (j - col) ** 2)
         return distance
 
-
     def manhattan_distance_heuristic(self,state):
         distance = 0  # total manhattan distances of all states
         for i in range(self.size):
@@ -165,7 +164,6 @@ class TilePuzzle:
                     col = (value - 1) % self.size
                     distance += abs(row - i) + abs(col - j)
         return distance
-
 
     def empty_heuristic(self,state):
         return 0

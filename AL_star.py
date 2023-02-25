@@ -1,11 +1,12 @@
-import copy
 import heapq
 from TilePuzzle import *
 
+best_sol_goal_node = None
 
 def a_star_lookahead(tile_puzzle, k=0):
+    global best_sol_goal_node
     UB = float('inf')
-
+    best_sol_goal_node = None
     # Create the initial node and priority opened
     initial_node = Node(tile_puzzle.start_state, tile_puzzle)
     min_cost, UB = lookAhead(tile_puzzle, initial_node, initial_node.F() + k, UB, float('inf'), k)
@@ -21,11 +22,10 @@ def a_star_lookahead(tile_puzzle, k=0):
         # print(len(opened))  # 362880
         if current_node.g >= UB:  # 1 #or current_node.state == final_state
             # The solution has been found ,return path
-            moves = current_node.getPathDirections()
-            return (len(moves),moves[::-1])  # 2 - halt
+            moves = best_sol_goal_node.getPathDirections()
+            return len(moves), moves[::-1]  # 2 - halt
 
         closed.add(str(current_node.state))  # 3
-        current_node.is_closed = True
         # Generate possible moves and add them to the opened
         for neighbour in current_node.neighbours:  # 4
             child = Node(neighbour, tile_puzzle, parent=current_node, g=current_node.g + 1)  # 5 - generateNode(op,v)
@@ -33,7 +33,7 @@ def a_star_lookahead(tile_puzzle, k=0):
                 continue
             if child.fu >= UB:  # 6
                 continue  # 7 - Prune
-            if child.state == final_state:  # 8 - goalTest(child)=True
+            if child.isFinalState:  # 8 - goalTest(child)=True
                 UB = child.fu  # 8
             LHB = min(UB, current_node.F() + k)  # 10 - LHB=lookahead bound
             if child.fu <= LHB:  # 11
@@ -56,6 +56,7 @@ def a_star_lookahead(tile_puzzle, k=0):
 
 
 def lookAhead(tile_puzzle, v, LHB, UB, min_cost, k, current_level=0):
+    global best_sol_goal_node
     if current_level > k:
         return min_cost, UB
     moves = v.get_moves()
@@ -63,9 +64,10 @@ def lookAhead(tile_puzzle, v, LHB, UB, min_cost, k, current_level=0):
         child = Node(op, tile_puzzle, parent=v, g=v.g + 1)  # 2 - generateNode(op, v)
         child.move = v.get_move_direction(child)
 
-        if child.isFinalState:  # 3 - goalTest(child)=True
+        if child.isFinalState and UB > child.g:  # 3 - goalTest(child)=True    TODO: check
             UB = child.g  # 4
             min_cost = min(min_cost, child.fu)  # 5
+            best_sol_goal_node = child
         else:  # 6
             if child.fu >= LHB:  # 7
                 min_cost = min(min_cost, child.fu)  # 8
