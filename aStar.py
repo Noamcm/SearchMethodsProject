@@ -1,20 +1,29 @@
 import heapq
-import possibleMoves
+from TilePuzzle import *
+
 
 # A* search algorithm
-def a_star(start_state, goal_state,heuristic_fn):
-    heap = [(0, start_state)]
-    visited = set()
-    g = {str(start_state): 0}
-    while heap:
-        f, state = heapq.heappop(heap)
-        if state == goal_state:
-            return g[str(state)]
-        visited.add(str(state))
-        possibleMove = possibleMoves.get_moves(state)
-        for move in possibleMove:
-            new_g = g[str(state)] + 1
-            if str(move) not in visited or new_g < g[str(move)]:
-                g[str(move)] = new_g
-                heapq.heappush(heap, (new_g + heuristic_fn(move), move))
-    return "NOT FOUND"
+def a_star(tile_puzzle):
+    initial_node = Node(tile_puzzle.start_state, tile_puzzle)
+    opened = [initial_node]  # heap
+    heapq.heapify(opened)
+    closed = set()
+
+    while opened:
+        current_node = heapq.heappop(opened)
+        if current_node.isFinalState:
+            moves = current_node.getPathDirections()
+            return len(moves), moves[::-1]
+        closed.add(current_node)
+
+        for neighbour in current_node.neighbours:
+            child = Node(neighbour, tile_puzzle, parent=current_node, g=current_node.g + 1)  # generateNode(op,v)
+            if child not in opened and child not in closed:  # not visited at all
+                heapq.heappush(opened, child)
+            elif child in opened and child.g < opened[opened.index(child)].g:
+                heapq.heapreplace(opened, child)
+            # elif child in closed:
+            #     old_child = closed.pop(child)
+            #     if (child.g < old_child.g)
+            #     heapq.heappush(opened, child)
+    return None
