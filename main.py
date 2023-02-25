@@ -1,38 +1,36 @@
+import time
 import timeit
+from statistics import mean
 
-import aStar
-import idaStar
-import heuristics
+from aStar import a_star
+from AL_star import a_star_lookahead
+import TilePuzzle
 
 
 def main():
-    easy_start_state = [[1, 2, 3], [4, 5, 6], [0, 7, 8]]
-    medium_start_state = [[1, 2, 3], [5, 6, 0], [7, 8, 4]]
-    difficult_start_state = [[8, 7, 6], [5, 4, 3], [2, 1, 0]]
+    levels = ["easy","medium","hard","extreme","unsolvable"] #"medium" 18.459 "hard" 26.7 "extreme" 52.86
+    heuristics = ["manhattan","euclidean","empty"]
+    puzzle_sizes = [8,15]
+    algorithms = [a_star , a_star_lookahead]
 
+    level="medium"
+    heuristic = "manhattan"
+    puzzle_size = 8
+    k= 5
+    algorithm = a_star_lookahead
 
-    goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+    tile_puzzle = TilePuzzle.TilePuzzle(puzzle_size, level, heuristic)
 
-    euclidean_heuristic = heuristics.euclidean_distance_heuristic
-    manhattan_heuristic = heuristics.manhattan_distance_heuristic
-    empty_heuristic = heuristics.empty_heuristic
-   
-    start_state = easy_start_state
-   
-    aStarEuc = aStar.a_star(start_state, goal_state,euclidean_heuristic)
-    idaStarEuc = idaStar.ida_star(start_state, goal_state,euclidean_heuristic)
-    print("euclidean A* result : "+ str(aStarEuc))
-    print("euclidean IDA*  result: "+ str(idaStarEuc))
-    
-    aStarM = aStar.a_star(start_state, goal_state,manhattan_heuristic)
-    idaStarM = idaStar.ida_star(start_state, goal_state,manhattan_heuristic)
-    print("manhattan A* result : "+ str(aStarM))
-    print("manhattan IDA*  result: "+ str(idaStarM))
-    
-    aStarEmp = aStar.a_star(start_state, goal_state,empty_heuristic)
-    idaStarEmp = idaStar.ida_star(start_state, goal_state,empty_heuristic)
-    print("empty A* result: "+ str(aStarEmp))
-    print("empty  IDA* result: "+ str(idaStarEmp))
+    times = []
+    for i in range(10):
+        print(i)
+        start = time.time()
+        # print(a_star_lookahead(tile_puzzle, k=k))
+        print(algorithm(tile_puzzle))
+        finish = time.time()
+        times.append(finish - start)
+    print(algorithm.__name__, str(puzzle_size)+" tile puzzle", "k="+str(k),level,heuristic ,  round(mean(times),3))
+
 
 if __name__ == "__main__":
     main()

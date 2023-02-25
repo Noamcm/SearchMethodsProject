@@ -1,5 +1,6 @@
 import heapq
-import possibleMoves
+from TilePuzzle import *
+
 
 # A* search algorithm
 def a_star(start_state, goal_state,heuristic_fn):
