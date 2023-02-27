@@ -121,7 +121,8 @@ class TilePuzzle:
             if difficulty == "medium":
                 # self.start_state = [[2, 3, 4], [1, 5, 6], [8, 7, 0]]
                 #self.start_state = [[0, 1, 2], [5, 6, 3], [4, 7, 8]] #size 8
-                self.start_state = [[0, 2, 3], [1, 4, 6], [7, 5, 8]] #size 8
+                #self.start_state = [[0, 2, 3], [1, 4, 6], [7, 5, 8]] #size 4
+                self.start_state = [[2, 3, 6], [1, 4, 8], [7, 5, 0]] #size 8
                 # self.start_state = [[3,4,2], [1,0,6], [8,5,7]]
                 # self.start_state = [[1, 3, 7], [4, 5, 8], [6, 2, 0]]
             if difficulty == "hard":
