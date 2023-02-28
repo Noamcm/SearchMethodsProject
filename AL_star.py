@@ -5,7 +5,7 @@ from TilePuzzle import *
 best_sol_goal_node = None
 
 def a_star_lookahead(tile_puzzle, k=0):
-    print("starting")
+    #print("starting")
     global best_sol_goal_node
     UB = float('inf')
     best_sol_goal_node = None

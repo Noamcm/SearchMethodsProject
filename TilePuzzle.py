@@ -18,11 +18,12 @@ class Node:
         self.isFinalState = True if self.state == tile_puzzle.final_state else False
 
     def __lt__(self, other):
+        return self.F() < other.F()
         # Used for sorting in the priority opened
-        if (self.tile_puzzle.algorithm_name == 'a_star'):
-            return self.F() < other.F()
-        else:
-            return self.fu < other.fu
+        # if (self.tile_puzzle.algorithm_name == 'a_star'):
+        #     return self.F() < other.F()
+        # else:
+        #     return self.fu < other.fu
 
     def __eq__(self, other):
         return self.state == other.state
@@ -198,7 +199,9 @@ class TilePuzzle:
             for j in range(len(state[0])):
                 if state[i][j] != self.final_state[i][j]:
                     distance+=1
-        return distance
+
+        # Subtract 1 to ignore the blank space being counted
+        return distance-1
 
     def max_heuristic(self, state):
         """Calculate the max heuristic between the current state and the goal state."""

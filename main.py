@@ -17,7 +17,7 @@ def main():
     heuristic = 'hamming' #"manhattan"
     puzzle_size = 8
     k = 4
-    algorithm = a_star #a_star  / a_star_lookahead
+    algorithm = a_star_lookahead #a_star  / a_star_lookahead
     # algorithm_name = "a_star"
     algorithm_name = str(algorithm.__name__)
 
@@ -26,11 +26,11 @@ def main():
     times = []
     lengths = []
 
-    for i in range(1000):
+    for i in range(100):
         #print(i)
         start = time.time()
-        len_moves, moves = a_star(tile_puzzle)
-        # len_moves, moves = (algorithm(tile_puzzle, k=k))
+        # len_moves, moves = a_star(tile_puzzle)
+        len_moves, moves = (algorithm(tile_puzzle, k=k))
         #if i==0:
         print(len_moves, moves)
         lengths.append(len_moves)
