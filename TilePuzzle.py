@@ -13,14 +13,16 @@ class Node:
             self.move = parent.get_move_direction(self)
         self.g = g
         self.heuristic = tile_puzzle.heuristic_func(state)
-        self.fu = self.heuristic  # self.F()  #float('inf')
+        self.fu = self.heuristic  # self.F()  #float('inf') #
         self.neighbours = self.get_neighbours()
         self.isFinalState = True if self.state == tile_puzzle.final_state else False
 
     def __lt__(self, other):
         # Used for sorting in the priority opened
-        # return (self.g + self.heuristic) < (other.g + other.heuristic)
-        return self.fu < other.fu
+        if (self.tile_puzzle.algorithm_name == 'a_star'):
+            return self.F() < other.F()
+        else:
+            return self.fu < other.fu
 
     def __eq__(self, other):
         return self.state == other.state
@@ -44,7 +46,7 @@ class Node:
         i, j = self.find_blank()
         state = copy.deepcopy(self.state)
         if direction == 'up' and i > 0:
-            state[i][j], state[i - 1][j] = self.state[i - 1][j],  self.state[i][j]
+            state[i][j], state[i - 1][j] = self.state[i - 1][j], self.state[i][j]
         elif direction == 'down' and i < self.tile_puzzle.size - 1:
             state[i][j], state[i + 1][j] = self.state[i + 1][j], self.state[i][j]
         elif direction == 'left' and j > 0:
@@ -109,24 +111,29 @@ class Node:
 
 
 class TilePuzzle:
-    def __init__(self, size, difficulty, heuristic_func):
-        self.size = int(math.sqrt(size+1))
+    def __init__(self, size, difficulty, heuristic_func, algorithm_name):
+        self.size = int(math.sqrt(size + 1))
+        self.algorithm_name = algorithm_name
         if size == 8:
             self.final_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
-            if difficulty=="easy":
+            if difficulty == "easy":
                 self.start_state = [[1, 2, 3], [4, 5, 6], [0, 7, 8]]
-            if difficulty=="medium":
+            if difficulty == "medium":
                 # self.start_state = [[2, 3, 4], [1, 5, 6], [8, 7, 0]]
-                self.start_state = [[3,4,2], [1,0,6], [8,5,7]]
-            if difficulty=="hard":
+                #self.start_state = [[0, 1, 2], [5, 6, 3], [4, 7, 8]] #size 8
+                #self.start_state = [[0, 2, 3], [1, 4, 6], [7, 5, 8]] #size 4
+                self.start_state = [[2, 3, 6], [1, 4, 8], [7, 5, 0]] #size 8
+                # self.start_state = [[3,4,2], [1,0,6], [8,5,7]]
+                # self.start_state = [[1, 3, 7], [4, 5, 8], [6, 2, 0]]
+            if difficulty == "hard":
                 self.start_state = [[2, 1, 3], [5, 4, 0], [7, 8, 6]]
-            if difficulty=="extreme":
+            if difficulty == "extreme":
                 self.start_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
-            if difficulty=="unsolvable":
+            if difficulty == "unsolvable":
                 self.start_state = [[1, 2, 3], [4, 5, 6], [8, 7, 0]]
         elif size == 15:
             self.final_state = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
-            if difficulty=="easy":
+            if difficulty == "easy":
                 self.start_state = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [0, 13, 14, 15]]
             # if difficulty=="medium":
             #     self.start_state = [[2, 3, 4], [1, 5, 6], [8, 7, 0]]
@@ -135,14 +142,14 @@ class TilePuzzle:
             # if difficulty=="extreme":
             #     self.start_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
 
-        if heuristic_func=="manhattan":
+        if heuristic_func == "manhattan":
             self.heuristic_func = self.manhattan_distance_heuristic
-        if heuristic_func=="euclidean":
+        if heuristic_func == "euclidean":
             self.heuristic_func = self.euclidean_distance_heuristic
-        if heuristic_func=="empty":
+        if heuristic_func == "empty":
             self.heuristic_func = self.empty_heuristic
 
-    def euclidean_distance_heuristic(self,state):
+    def euclidean_distance_heuristic(self, state):
         # Heuristic function - returns the Euclidean distance between two tiles
         distance = 0  # total euclidean distances of all states
         for i in range(self.size):
@@ -154,7 +161,7 @@ class TilePuzzle:
                     distance += math.sqrt((i - row) ** 2 + (j - col) ** 2)
         return distance
 
-    def manhattan_distance_heuristic(self,state):
+    def manhattan_distance_heuristic(self, state):
         distance = 0  # total manhattan distances of all states
         for i in range(self.size):
             for j in range(self.size):
@@ -163,7 +170,19 @@ class TilePuzzle:
                     row = (value - 1) // self.size
                     col = (value - 1) % self.size
                     distance += abs(row - i) + abs(col - j)
+        # start = [num for sublist in state for num in sublist]
+        # goal = [num for sublist in  self.final_state for num in sublist]
+        # distance = sum(abs(b % 3 - g % 3) + abs(b // 3 - g // 3) for b, g in ((start.index(i), goal.index(i)) for i in range(0, 8)))
+        # dict_d = {1: (0, 0), 2: (0, 1), 3: (0, 2), 4: (1, 0), 5: (1, 1), 6: (1, 2), 7: (2, 0), 8: (2, 1), 0: (2, 2)}
+        # dict_distance = 0
+        # for i in range(self.size):
+        #     for j in range(self.size):
+        #         value = state[i][j]
+        #         dict_distance += abs(dict_d[value][0] - i) + abs(dict_d[value][1] - j)
+        # 
+        # print("code dist:" + str(distance))
+        # print("dict dist:" + str(dict_distance))
         return distance
 
-    def empty_heuristic(self,state):
+    def empty_heuristic(self, state):
         return 0

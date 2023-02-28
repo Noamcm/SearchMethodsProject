@@ -14,22 +14,28 @@ def main():
     algorithms = [a_star, a_star_lookahead]
 
     level = "medium"
-    heuristic = "manhattan"
+    heuristic = 'manhattan' #"manhattan"
     puzzle_size = 8
-    k = 5
-    algorithm = a_star_lookahead
+    k = 4
+    algorithm = a_star_lookahead #a_star
+    # algorithm_name = "a_star"
+    algorithm_name = str(algorithm)
 
-    tile_puzzle = TilePuzzle.TilePuzzle(puzzle_size, level, heuristic)
+    tile_puzzle = TilePuzzle.TilePuzzle(puzzle_size, level, heuristic, algorithm_name)
 
     times = []
+    lengths = []
     for i in range(10):
-        print(i)
+        #print(i)
         start = time.time()
-        # print(a_star_lookahead(tile_puzzle, k=k))
-        print(algorithm(tile_puzzle))
+        # len_moves, moves = a_star(tile_puzzle)
+        len_moves, moves = (algorithm(tile_puzzle, k=k))
+        #if i==0:
+        print(len_moves, moves)
+        lengths.append(len_moves)
         finish = time.time()
         times.append(finish - start)
-    print(algorithm.__name__, str(puzzle_size)+" tile puzzle", "k="+str(k), level, heuristic,  round(mean(times), 3))
+    print(algorithm.__name__, str(puzzle_size)+" tile puzzle", "k="+str(k), level, heuristic,  round(mean(times), 3) , "min: ",min(lengths), "max: ", max(lengths))
 
 
 if __name__ == "__main__":
