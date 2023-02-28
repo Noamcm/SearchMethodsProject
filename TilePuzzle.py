@@ -144,6 +144,10 @@ class TilePuzzle:
 
         if heuristic_func == "manhattan":
             self.heuristic_func = self.manhattan_distance_heuristic
+        if heuristic_func == "hamming":
+            self.heuristic_func = self.hamming_distance_heuristic
+        if heuristic_func == "max":
+            self.heuristic_func = self.max_heuristic
         if heuristic_func == "euclidean":
             self.heuristic_func = self.euclidean_distance_heuristic
         if heuristic_func == "empty":
@@ -162,17 +166,17 @@ class TilePuzzle:
         return distance
 
     def manhattan_distance_heuristic(self, state):
-        distance = 0  # total manhattan distances of all states
-        for i in range(self.size):
-            for j in range(self.size):
-                value = state[i][j]
-                if value != 0:
-                    row = (value - 1) // self.size
-                    col = (value - 1) % self.size
-                    distance += abs(row - i) + abs(col - j)
-        # start = [num for sublist in state for num in sublist]
-        # goal = [num for sublist in  self.final_state for num in sublist]
-        # distance = sum(abs(b % 3 - g % 3) + abs(b // 3 - g // 3) for b, g in ((start.index(i), goal.index(i)) for i in range(0, 8)))
+        # distance = 0  # total manhattan distances of all states
+        # for i in range(self.size):
+        #     for j in range(self.size):
+        #         value = state[i][j]
+        #         if value != 0:
+        #             row = (value - 1) // self.size
+        #             col = (value - 1) % self.size
+        #             distance += abs(row - i) + abs(col - j)
+        start = [num for sublist in state for num in sublist]
+        goal = [num for sublist in  self.final_state for num in sublist]
+        distance = sum(abs(b % 3 - g % 3) + abs(b // 3 - g // 3) for b, g in ((start.index(i), goal.index(i)) for i in range(1,9)))
         # dict_d = {1: (0, 0), 2: (0, 1), 3: (0, 2), 4: (1, 0), 5: (1, 1), 6: (1, 2), 7: (2, 0), 8: (2, 1), 0: (2, 2)}
         # dict_distance = 0
         # for i in range(self.size):
@@ -183,6 +187,36 @@ class TilePuzzle:
         # print("code dist:" + str(distance))
         # print("dict dist:" + str(dict_distance))
         return distance
+
+    def hamming_distance_heuristic(self, state):
+        # start = [num for sublist in state for num in sublist]
+        # goal = [num for sublist in  self.final_state for num in sublist]
+        # x= [0 if start.index(i)==goal.index(i) else 1 for i in range(1,9)]
+        # distance = sum(x)
+        distance=0
+        for i in range(len(state)):
+            for j in range(len(state[0])):
+                if state[i][j] != self.final_state[i][j]:
+                    distance+=1
+        return distance
+
+    def max_heuristic(self, state):
+        """Calculate the max heuristic between the current state and the goal state."""
+        max_distance = 0
+        start = [num for sublist in state for num in sublist]
+        goal = [num for sublist in  self.final_state for num in sublist]
+
+        for i in range(len(start)):
+            if start[i] != 0:
+                current_row = i // 3
+                current_col = i % 3
+                goal_index = goal.index(start[i])
+                goal_row = goal_index // 3
+                goal_col = goal_index % 3
+                distance = max(abs(current_row - goal_row), abs(current_col - goal_col))
+                if distance > max_distance:
+                    max_distance = distance
+        return max_distance
 
     def empty_heuristic(self, state):
         return 0
