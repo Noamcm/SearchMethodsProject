@@ -13,17 +13,17 @@ class Node:
             self.move = parent.get_move_direction(self)
         self.g = g
         self.heuristic = tile_puzzle.heuristic_func(state)
-        self.fu = self.heuristic  # self.F()  #float('inf') #
+        self.fu = self.F()  # self.heuristic  #float('inf') #
         self.neighbours = self.get_neighbours()
         self.isFinalState = True if self.state == tile_puzzle.final_state else False
 
     def __lt__(self, other):
-        return self.F() < other.F()
+        #return self.F() < other.F()
         # Used for sorting in the priority opened
-        # if (self.tile_puzzle.algorithm_name == 'a_star'):
-        #     return self.F() < other.F()
-        # else:
-        #     return self.fu < other.fu
+        if (self.tile_puzzle.algorithm_name == 'a_star'):
+            return self.F() < other.F()
+        else:
+            return self.fu < other.fu
 
     def __eq__(self, other):
         return self.state == other.state
