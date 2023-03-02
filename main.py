@@ -13,7 +13,7 @@ def main():
     puzzle_sizes = [8,15]
     algorithms = [a_star, a_star_lookahead]
 
-    level = "extreme"
+    level = "easy"
     heuristic = 'hamming' #"manhattan"
     puzzle_size = 8
     k = 4

@@ -34,15 +34,14 @@ def a_star_lookahead(tile_puzzle, k=0):
             #print(child.fu)
             if child in closed:  # NOT IN ALGORITHM - TO CHECK
                 continue
-            if child.fu >= UB:  # 6
+            if child.g >= UB:  # 6 nodes with !cost! larger than or equal to UB can be immediately pruned
                 continue  # 7 - Prune
             if child.isFinalState:  # 8 - goalTest(child)=True
                 #print("update parent ", child.parent.state)
                 UB = child.fu  # 8
             LHB = min(UB, current_node.F() + k)  # 10 - LHB=lookahead bound
-            if child.fu <= LHB:  # 11
-                min_cost, UB = lookAhead(tile_puzzle, child, LHB, UB, float('inf'),
-                                         k)  # 12, 13 - lookahead call can update UB
+            if child.fu <= LHB:  # 11 expand only nodes with costs less than or equal to f(v) + k
+                min_cost, UB = lookAhead(tile_puzzle, v=child, LHB=LHB, UB=UB, min_cost=float('inf'),k=k)  # 12, 13 - lookahead call can update UB
                 if min_cost > child.F():  # 14.1
                     #print(min_cost,child.fu)
                     child.fu = min_cost  # 14.2
