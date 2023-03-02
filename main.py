@@ -9,12 +9,12 @@ import TilePuzzle
 
 def main():
     levels = ["easy", "medium", "hard", "extreme", "unsolvable"]  # "medium" 18.459 "hard" 26.7 "extreme" 52.86
-    heuristics = ["manhattan","hamming", "euclidean", "empty"]
+    heuristics = ["manhattan", "hamming", "euclidean", "empty"]
     puzzle_sizes = [8,15]
     algorithms = [a_star, a_star_lookahead]
 
-    level = "extreme"
-    heuristic = 'hamming' #"manhattan"
+    level = "hard"
+    heuristic = 'euclidean' #"manhattan"
     puzzle_size = 8
     k = 4
     algorithm = a_star_lookahead #a_star  / a_star_lookahead
@@ -26,7 +26,7 @@ def main():
     times = []
     lengths = []
 
-    for i in range(100):
+    for i in range(1):
         #print(i)
         start = time.time()
         # len_moves, moves = a_star(tile_puzzle)

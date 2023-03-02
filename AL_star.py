@@ -11,8 +11,8 @@ def a_star_lookahead(tile_puzzle, k=0):
     best_sol_goal_node = None
     # Create the initial node and priority opened
     initial_node = Node(tile_puzzle.start_state, tile_puzzle)
-    min_cost, UB = lookAhead(tile_puzzle, initial_node, initial_node.F() + k, UB, float('inf'), k)
-    if min_cost > initial_node.F():
+    min_cost, UB = lookAhead(tile_puzzle, initial_node, initial_node.f + k, UB, float('inf'), k)
+    if min_cost > initial_node.f:
         initial_node.fu = min_cost
     opened = [initial_node]
     heapq.heapify(opened)
@@ -39,11 +39,11 @@ def a_star_lookahead(tile_puzzle, k=0):
             if child.isFinalState:  # 8 - goalTest(child)=True
                 #print("update parent ", child.parent.state)
                 UB = child.fu  # 8
-            LHB = min(UB, current_node.F() + k)  # 10 - LHB=lookahead bound
+            LHB = min(UB, current_node.f + k)  # 10 - LHB=lookahead bound
             if child.fu <= LHB:  # 11
                 min_cost, UB = lookAhead(tile_puzzle, child, LHB, UB, float('inf'),
                                          k)  # 12, 13 - lookahead call can update UB
-                if min_cost > child.F():  # 14.1
+                if min_cost > child.f:  # 14.1
                     child.fu = min_cost  # 14.2
             if child not in opened:  # 15 - duplicateDetection(child)=False
                 heapq.heappush(opened, child)  # 16 - Insert child to open list
@@ -56,6 +56,11 @@ def a_star_lookahead(tile_puzzle, k=0):
                 #     opened[index] = child
                 #     heapq.heapify(opened)
 
+    # if best_sol_goal_node is not None:  # 1 #or current_node.state == final_state  # and current_node.isFinalState
+    #     # The solution has been found ,return path
+    #     # print("final parent " ,best_sol_goal_node.parent.state)
+    #     moves = best_sol_goal_node.getPathDirections()
+    #     return len(moves), moves[::-1]  # 2 - halt
     # No solution found
     return None, None
 
