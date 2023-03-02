@@ -13,7 +13,7 @@ class Node:
             self.move = parent.get_move_direction(self)
         self.g = g
         self.heuristic = tile_puzzle.heuristic_func(state)
-        self.fu = self.F()  # self.heuristic  #float('inf') #
+        self.fu = self.g  # self.heuristic  #self.F()  #self.g
         self.neighbours = self.get_neighbours()
         self.isFinalState = True if self.state == tile_puzzle.final_state else False
 
@@ -23,7 +23,7 @@ class Node:
         if (self.tile_puzzle.algorithm_name == 'a_star'):
             return self.F() < other.F()
         else:
-            return self.fu < other.fu
+            return self.fu < other.fu #fu is used to order OPEN
 
     def __eq__(self, other):
         return self.state == other.state
