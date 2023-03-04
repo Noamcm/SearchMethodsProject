@@ -13,27 +13,24 @@ class Node:
             self.move = parent.get_move_direction(self)
         self.g = g
         self.heuristic = tile_puzzle.heuristic_func(state)
-        self.fu = self.heuristic  # self.F()  #float('inf') #
         self.neighbours = self.get_neighbours()
         self.isFinalState = True if self.state == tile_puzzle.final_state else False
         self.f = self.g + self.heuristic
+        self.fu = self.f  #float('inf') #self.heuristic  #self.g ??  יוריסטיקה!!!
 
     def __lt__(self, other):
-        #return self.F() < other.F()
+        # return self.F() < other.F()
         # Used for sorting in the priority opened
         if (self.tile_puzzle.algorithm_name == 'a_star'):
             return self.f < other.f
         else:
-            return self.fu < other.fu #fu is used to order OPEN
+            return self.fu < other.fu
 
     def __eq__(self, other):
         return self.state == other.state
 
     def __hash__(self):
         return str(self.state).__hash__()
-
-    def F(self):
-        return self.g + self.heuristic
 
     def find_blank(self):
         # Helper function to find the location of the blank tile (0)
@@ -47,13 +44,13 @@ class Node:
         # Helper function to make a move in a given direction
         i, j = self.find_blank()
         state = copy.deepcopy(self.state)
-        if direction == 'up' and i > 0:
+        if direction == 'up' and i > 0 and self.move != 'down':
             state[i][j], state[i - 1][j] = self.state[i - 1][j], self.state[i][j]
-        elif direction == 'down' and i < self.tile_puzzle.size - 1:
+        elif direction == 'down' and i < self.tile_puzzle.size - 1 and self.move != 'up':
             state[i][j], state[i + 1][j] = self.state[i + 1][j], self.state[i][j]
-        elif direction == 'left' and j > 0:
+        elif direction == 'left' and j > 0 and self.move != 'right':
             state[i][j], state[i][j - 1] = self.state[i][j - 1], self.state[i][j]
-        elif direction == 'right' and j < self.tile_puzzle.size - 1:
+        elif direction == 'right' and j < self.tile_puzzle.size - 1 and self.move != 'left':
             state[i][j], state[i][j + 1] = self.state[i][j + 1], self.state[i][j]
         return state
 
@@ -195,11 +192,11 @@ class TilePuzzle:
         # goal = [num for sublist in  self.final_state for num in sublist]
         # x= [0 if start.index(i)==goal.index(i) else 1 for i in range(1,9)]
         # distance = sum(x)
-        distance=0
+        distance = 0
         for i in range(len(state)):
             for j in range(len(state[0])):
                 if state[i][j] != self.final_state[i][j]:
-                    distance+=1
+                    distance += 1
 
         # Subtract 1 to ignore the blank space being counted
         return distance-1
