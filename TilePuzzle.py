@@ -16,7 +16,7 @@ class Node:
         self.neighbours = self.get_neighbours()
         self.isFinalState = True if self.state == tile_puzzle.final_state else False
         self.f = self.g + self.heuristic
-        self.fu = self.heuristic  #float('inf') #self.heuristic  #self.g ??  יוריסטיקה!!!
+        self.fu = self.f  #float('inf') #self.heuristic  #self.g ??  יוריסטיקה!!!
 
     def __lt__(self, other):
         # return self.F() < other.F()
@@ -32,9 +32,6 @@ class Node:
     def __hash__(self):
         return str(self.state).__hash__()
 
-    # def F(self):
-    #     return self.g + self.heuristic
-
     def find_blank(self):
         # Helper function to find the location of the blank tile (0)
         for i in range(self.tile_puzzle.size):
@@ -47,13 +44,13 @@ class Node:
         # Helper function to make a move in a given direction
         i, j = self.find_blank()
         state = copy.deepcopy(self.state)
-        if direction == 'up' and i > 0:
+        if direction == 'up' and i > 0 and self.move != 'down':
             state[i][j], state[i - 1][j] = self.state[i - 1][j], self.state[i][j]
-        elif direction == 'down' and i < self.tile_puzzle.size - 1:
+        elif direction == 'down' and i < self.tile_puzzle.size - 1 and self.move != 'up':
             state[i][j], state[i + 1][j] = self.state[i + 1][j], self.state[i][j]
-        elif direction == 'left' and j > 0:
+        elif direction == 'left' and j > 0 and self.move != 'right':
             state[i][j], state[i][j - 1] = self.state[i][j - 1], self.state[i][j]
-        elif direction == 'right' and j < self.tile_puzzle.size - 1:
+        elif direction == 'right' and j < self.tile_puzzle.size - 1 and self.move != 'left':
             state[i][j], state[i][j + 1] = self.state[i][j + 1], self.state[i][j]
         return state
 
