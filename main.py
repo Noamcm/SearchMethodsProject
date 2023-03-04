@@ -8,35 +8,53 @@ import TilePuzzle
 
 
 def main():
-    levels = ["easy", "medium", "hard", "extreme", "unsolvable"]  # "medium" 18.459 "hard" 26.7 "extreme" 52.86
-    heuristics = ["manhattan", "hamming", "euclidean", "empty"]
-    puzzle_sizes = [8, 15]
-    algorithms = [a_star, a_star_lookahead]
+    levels = ["easy", "medium", "hard"]
+    heuristics = ["hamming", "euclidean", "manhattan"]
 
-    level = "hard"
-    heuristic = 'euclidean' #"hamming"  #"manhattan"
-    puzzle_size = 8
-    k = 4
-    algorithm = a_star_lookahead #a_star  / a_star_lookahead
-    # algorithm_name = "a_star"
-    algorithm_name = str(algorithm.__name__)
+    for h in heuristics:
+        for l in levels:
+            level = l
+            heuristic = h
+            puzzle_size = 8
+            k = 4
+            algorithm = a_star
+            algorithm_name = str(algorithm.__name__)
+            tile_puzzle = TilePuzzle.TilePuzzle(puzzle_size, level, heuristic, algorithm_name)
 
-    tile_puzzle = TilePuzzle.TilePuzzle(puzzle_size, level, heuristic, algorithm_name)
+            algorithm = a_star_lookahead
+            times = []
+            lengths = []
+            expand=[]
+            lookahead=[]
+            dup=[]
 
-    times = []
-    lengths = []
+            for i in range(1000):
+                start = time.time()
+                len_moves, moves, total_expand, total_found_lookahead, total_found_again = (algorithm(tile_puzzle, k=k, check_lookahead_closed=False))
+                finish = time.time()
+                times.append(finish - start)
+                lengths.append(len_moves)
+                expand.append(total_expand)
+                lookahead.append(total_found_lookahead)
+                dup.append(total_found_again)
+            print(algorithm.__name__, str(puzzle_size)+" tile puzzle", "k="+str(k), level, heuristic,"avg time: ",round(mean(times), 10),"avg expanded nodes: ",  round(mean(expand), 10),"avg lookahead nodes: ",  round(mean(lookahead), 10),"avg duplicated nodes: ",  round(mean(dup), 10) , "min: ",min(lengths), "max: ", max(lengths), "pruning= False")
 
-    for i in range(100):
-        #print(i)
-        start = time.time()
-        # len_moves, moves = a_star(tile_puzzle)
-        len_moves, moves = (algorithm(tile_puzzle, k=k, check_lookahead_closed=False))
-        #if i==0:
-        print(len_moves, moves)
-        lengths.append(len_moves)
-        finish = time.time()
-        times.append(finish - start)
-    print(algorithm.__name__, str(puzzle_size)+" tile puzzle", "k="+str(k), level, heuristic,  round(mean(times), 3) , "min: ",min(lengths), "max: ", max(lengths))
+            times = []
+            lengths = []
+            expand=[]
+            lookahead=[]
+            dup=[]
+
+            for i in range(1000):
+                start = time.time()
+                len_moves, moves, total_expand, total_found_lookahead, total_found_again = (algorithm(tile_puzzle, k=k, check_lookahead_closed=True))
+                finish = time.time()
+                times.append(finish - start)
+                lengths.append(len_moves)
+                expand.append(total_expand)
+                lookahead.append(total_found_lookahead)
+                dup.append(total_found_again)
+            print(algorithm.__name__, str(puzzle_size)+" tile puzzle", "k="+str(k), level, heuristic,"avg time: ",round(mean(times), 10),"avg expanded nodes: ",  round(mean(expand), 10),"avg lookahead nodes: ",  round(mean(lookahead), 10),"avg duplicated nodes: ",  round(mean(dup), 10) , "min: ",min(lengths), "max: ", max(lengths), "pruning= True")
 
 
 if __name__ == "__main__":

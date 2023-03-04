@@ -1,7 +1,6 @@
 import heapq
 from TilePuzzle import *
 
-
 best_sol_goal_node = None
 
 def a_star_lookahead(tile_puzzle, k=0, check_lookahead_closed=False):
